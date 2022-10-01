@@ -4,3 +4,4 @@ exclude =
     .git,
     __pycache__,
     docs/source/conf.py,
+    */migrations/,
