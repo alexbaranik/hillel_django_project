@@ -31,4 +31,6 @@ class Discount(models.Model):
     amount = models.PositiveIntegerField()
     code = models.CharField(max_length=32)
     is_active = models.BooleanField(default=True)
-    discount_type = models.PositiveIntegerField(choices=((0, 'В деньгах'), (1, 'Проценты'),))
+    discount_type = models.PositiveIntegerField(
+        choices=((0, 'В деньгах'), (1, 'Проценты'),)
+    )
