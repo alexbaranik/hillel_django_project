@@ -12,9 +12,13 @@ def upload_image(instance, filename):
 
 
 class Item(PKMixin):
-    name = models.CharField(max_length=255)
+    name = models.CharField(
+        max_length=255
+    )
     description = models.TextField()
-    image = models.ImageField(upload_to=upload_image)
+    image = models.ImageField(
+        upload_to=upload_image
+    )
     category = models.ForeignKey(
         "items.Category",
         on_delete=models.CASCADE
@@ -22,9 +26,13 @@ class Item(PKMixin):
 
 
 class Category(PKMixin):
-    name = models.CharField(max_length=255)
+    name = models.CharField(
+        max_length=255
+    )
     description = models.TextField()
-    image = models.ImageField(upload_to=upload_image)
+    image = models.ImageField(
+        upload_to=upload_image
+    )
 
 
 class Product(PKMixin):
