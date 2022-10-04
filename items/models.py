@@ -1,25 +1,37 @@
-from pyexpat import model
+# from pyexpat import model
+from os import path
 from django.db import models
+from django.core.validators import MinValueValidator
+
+from shop.mixins.models_mixins import PKMixin
 
 
-class Item(models.Model):
+def upload_image(instance, filename):
+    _name, extension = path.splitext(filename)
+    return f'images/{instance.__class__.__name__.lower()}/'\
+        f'{instance.pk}/image{extension}'
+
+class Item(PKMixin):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
 
-class Category(models.Model):
+class Category(PKMixin):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    image = models.ImageField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    image = models.ImageField(upload_to=upload_image)
 
 
-class Product(models.Model):
-    price = models.PositiveIntegerField()
-    scu = models.CharField(max_length=32)
+class Product(PKMixin):
+    price = models.PositiveIntegerField(
+        validators=[MinValueValidator(1)]
+    )
+    scu = models.CharField(
+        max_length=32,
+        blank=True,
+        null=True
+    )
+    items = models.ManyToManyField(Item)
 
 
 class Discount(models.Model):
