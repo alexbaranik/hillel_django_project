@@ -9,11 +9,16 @@ from shop.mixins.models_mixins import PKMixin
 def upload_image(instance, filename):
     _name, extension = path.splitext(filename)
     return f'images/{instance.__class__.__name__.lower()}/'\
-        f'{instance.pk}/image{extension}'
+            f'{instance.pk}/image{extension}'
 
 class Item(PKMixin):
     name = models.CharField(max_length=255)
     description = models.TextField()
+    image = models.ImageField(upload_to=upload_image)
+    category = models.ForeignKey(
+        "items.Category",
+        on_delete=models.CASCADE
+    )
 
 
 class Category(PKMixin):
