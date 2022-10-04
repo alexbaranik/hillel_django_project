@@ -3,6 +3,23 @@ from django.contrib.auth import get_user_model
 
 from shop.constants import MAX_DIGITS, DECIMAL_PLACES
 from shop.mixins.models_mixins import PKMixin
+from shop.model_choices import DiscountTypes
+
+
+class Discount(models.Model):
+    amount = models.PositiveSmallIntegerField(
+        default=0
+    )
+    code = models.CharField(
+        max_length=32
+    )
+    is_active = models.BooleanField(
+        default=True
+        )
+    discount_type = models.PositiveIntegerField(
+        choices=DiscountTypes.choices,
+        default=DiscountTypes.VALUE
+    )
 
 
 class Order(PKMixin):
@@ -18,3 +35,9 @@ class Order(PKMixin):
         blank=True
     )
     product = models.ManyToManyField("items.Product")
+    discount = models.ForeignKey(
+        Discount,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )

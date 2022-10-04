@@ -2,6 +2,7 @@ import uuid
 
 from django.db import models
 
+
 class PKMixin(models.Model):
     id = models.UUIDField(
         primary_key=True,
