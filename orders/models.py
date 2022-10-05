@@ -6,7 +6,7 @@ from shop.mixins.models_mixins import PKMixin
 from shop.model_choices import DiscountTypes
 
 
-class Discount(models.Model):
+class Discount(PKMixin):
     amount = models.PositiveSmallIntegerField(
         default=0
     )
@@ -20,6 +20,9 @@ class Discount(models.Model):
         choices=DiscountTypes.choices,
         default=DiscountTypes.VALUE
     )
+
+    def __str__(self) -> str:
+        return f'{self.amount} | {self.discount_type}'
 
 
 class Order(PKMixin):
@@ -41,3 +44,6 @@ class Order(PKMixin):
         null=True,
         blank=True
     )
+
+    def __str__(self) -> str:
+        return f'{self.user} | {self.total_amount}'

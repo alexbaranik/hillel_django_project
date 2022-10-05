@@ -24,6 +24,8 @@ class Item(PKMixin):
         on_delete=models.CASCADE
     )
 
+    def __str__(self) -> str:
+        return f'{self.name} | {self.category}'
 
 class Category(PKMixin):
     name = models.CharField(
@@ -34,14 +36,22 @@ class Category(PKMixin):
         upload_to=upload_image
     )
 
+    def __str__(self) -> str:
+        return self.name
 
 class Product(PKMixin):
+    name = models.CharField(
+        max_length=255
+    )
     price = models.PositiveIntegerField(
         validators=[MinValueValidator(1)]
     )
-    scu = models.CharField(
+    sku = models.CharField(
         max_length=32,
         blank=True,
         null=True
     )
     items = models.ManyToManyField(Item)
+
+    def __str__(self) -> str:
+        return f'{self.name} | {self.price} | {self.sku}'
