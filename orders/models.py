@@ -22,7 +22,7 @@ class Discount(PKMixin):
     )
 
     def __str__(self) -> str:
-        return f'{self.amount} | {self.discount_type}'
+        return f'{self.amount} | {self.code}'
 
 
 class Order(PKMixin):
@@ -47,3 +47,13 @@ class Order(PKMixin):
 
     def __str__(self) -> str:
         return f'{self.user} | {self.total_amount}'
+
+    def get_total_amount(self):
+        if self.discount:
+            if self.discount.discount_type == DiscountTypes.VALUE:
+                return self.total_amount - self.discount.amount
+            else:
+                return self.total_amount - round(
+                        self.total_amount / 100 * self.discount.amount, 2
+                        )
+        return self.total_amount

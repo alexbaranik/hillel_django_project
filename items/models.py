@@ -27,6 +27,7 @@ class Item(PKMixin):
     def __str__(self) -> str:
         return f'{self.name} | {self.category}'
 
+
 class Category(PKMixin):
     name = models.CharField(
         max_length=255
@@ -38,6 +39,7 @@ class Category(PKMixin):
 
     def __str__(self) -> str:
         return self.name
+
 
 class Product(PKMixin):
     name = models.CharField(
