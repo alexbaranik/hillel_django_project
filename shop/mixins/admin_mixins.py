@@ -8,4 +8,3 @@ class ImageMixins():
                 f'<img src="{instance.image.url}" width="64" height="64"/>'
                 )
         return mark_safe('Image missing')
-    
