@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.db import models
 from django.contrib.auth import get_user_model
 
@@ -51,9 +53,10 @@ class Order(PKMixin):
     def get_total_amount(self):
         if self.discount:
             if self.discount.discount_type == DiscountTypes.VALUE:
-                return self.total_amount - self.discount.amount
+                return self.total_amount - Decimal(
+                    self.discount.amount).quantize(Decimal('1.00'))
             else:
-                return self.total_amount - round(
+                return self.total_amount - Decimal(
                         self.total_amount / 100 * self.discount.amount, 2
-                        )
+                        ).quantize(Decimal('1.00'))
         return self.total_amount

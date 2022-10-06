@@ -1,11 +1,14 @@
 from django.contrib import admin
+from django.utils.safestring import mark_safe
 
+from shop.mixins.admin_mixins import ImageMixins
 from items.models import Item, Product, Category
 
 
 @admin.register(Item)
-class ItemAdmin(admin.ModelAdmin):
-    list_display = ('name', 'created_at',)
+class ItemAdmin(admin.ModelAdmin, ImageMixins):
+    readonly_fields = ('image_snapshot',)
+    list_display = ('image_snapshot', 'name', 'created_at',)
     list_filter = ('created_at',)
 
 
@@ -17,5 +20,6 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 @admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
-    ...
+class CategoryAdmin(admin.ModelAdmin, ImageMixins):
+    readonly_fields = ('image_snapshot',)
+    list_display = ('image_snapshot', 'name', 'created_at')
