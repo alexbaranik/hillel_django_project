@@ -57,6 +57,6 @@ class Order(PKMixin):
                     self.discount.amount).quantize(Decimal('1.00'))
             else:
                 return self.total_amount - Decimal(
-                        self.total_amount / 100 * self.discount.amount, 2
+                        self.total_amount / 100 * self.discount.amount
                         ).quantize(Decimal('1.00'))
         return self.total_amount
