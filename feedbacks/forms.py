@@ -1,6 +1,7 @@
 from django import forms
 
 from feedbacks.models import Feedback
+from shop.utils import cleaner
 
 
 class FeedbackModelForm(forms.ModelForm):
@@ -12,3 +13,7 @@ class FeedbackModelForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['user'].widget = forms.HiddenInput()
         self.fields['user'].initial = user
+
+    def clean_text(self):
+        text = self.cleaned_data['text']
+        return cleaner(text)

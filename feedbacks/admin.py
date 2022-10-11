@@ -5,4 +5,5 @@ from feedbacks.models import Feedback
 
 @admin.register(Feedback)
 class FeedbackAdmin(admin.ModelAdmin):
-    list_display = ('user', 'text', 'rating')
+    list_display = ('user', 'text', 'rating', 'created_at',)
+    list_filter = ('user',)
