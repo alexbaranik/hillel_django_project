@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import environ
 from pathlib import Path
 
+from django.urls import reverse_lazy
+
 
 env = environ.Env(
     # set casting, default value
@@ -50,6 +52,7 @@ INSTALLED_APPS = [
     'items',
     'orders',
     'feedbacks',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -136,3 +139,7 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGOUT_REDIRECT_URL = reverse_lazy('login')
+LOGIN_REDIRECT_URL = 'items'
+LOGIN_URL = 'login'
