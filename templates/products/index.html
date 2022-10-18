@@ -5,13 +5,13 @@
     <title>Title</title>
 </head>
 <body>
-<h1>Items</h1>
+<h1>Products</h1>
 
-{% for item in items %}
+{% for product in products %}
     <p>
-        <span>Title: {{ item.name }}</span>
-        <span>Description: {{ item.description }}</span>
-        <span>Category: {{ item.category.name }}</span>
+        <span>Title: {{ product.name }}</span>
+        <span>Description: {{ product.description }}</span>
+        <span>Category: {{ product.category.name }}</span>
     </p>
 {% endfor %}
 <div>
@@ -21,7 +21,7 @@
             <label>{{ field.label }}</label>
             {{ field }}
         {% endfor %}
-        <input type="submit" value="Create Item">
+        <input type="submit" value="Create Products">
     </form>
 </div>
 </body>
