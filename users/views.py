@@ -10,7 +10,7 @@ def registration(request):
         if form.is_valid():
             form.save()
             login(request, form.save())
-            return redirect('items')
+            return redirect('products')
     else:
         form = RegistrationForm()
 

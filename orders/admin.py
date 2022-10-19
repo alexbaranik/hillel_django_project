@@ -9,6 +9,7 @@ class OrderAdmin(admin.ModelAdmin):
     readonly_fields = ('overall_amount',)
     list_display = ('user', 'total_amount', 'discount', 'created_at',
                     'overall_amount',)
+    filter_horizontal = ('products',)
 
     def overall_amount(self, instance):
         return mark_safe(instance.get_total_amount())
