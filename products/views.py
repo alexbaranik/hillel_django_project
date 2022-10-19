@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.views.generic import ListView, DetailView
 
 from products.model_forms import ProductModelForm
 from products.models import Product
@@ -16,3 +17,11 @@ def products(request, *args, **kwargs):
         'form': form
     }
     return render(request, 'products/index.html', context=context)
+
+
+class ProductsView(ListView):
+    model = Product
+
+
+class ProductDetail(DetailView):
+    model = Product

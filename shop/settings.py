@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     'orders',
     'feedbacks',
     'users',
-    # 'main',
+    'main',
 ]
 
 MIDDLEWARE = [
@@ -148,6 +148,6 @@ MEDIA_ROOT = 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGOUT_REDIRECT_URL = reverse_lazy('products')
-LOGIN_REDIRECT_URL = reverse_lazy('products')
+LOGOUT_REDIRECT_URL = reverse_lazy('main')
+LOGIN_REDIRECT_URL = reverse_lazy('main')
 LOGIN_URL = reverse_lazy('login')
