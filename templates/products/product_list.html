@@ -7,9 +7,11 @@
                 {% for product in object_list %}
                     <div class="col">
                         <div class="card h-100">
-                            <img src="{{ product.image.url }}"
-                                 class="product-image"
-                                 alt="{{ product.name }}">
+                            <a href="{% url 'product_detail' product.id %}">
+                                <img src="{{ product.image.url }}"
+                                    class="product-image"
+                                    alt="{{ product.name }}" height="200" width="200" >
+                            </a>
                             <div class="card-body">
                                 <h5 class="card-title">{{ product.name }}</h5>
                                 <p class="card-text">{{ product.description|truncatewords:16 }}</p>
@@ -18,7 +20,9 @@
                                 </div>
                             </div>
                             <div class="card-footer">
-                                <a href="{% url 'product_detail' product.id %}" class="btn btn-primary">Details...</a>
+                                <div class="text-center">
+                                    <a href="{% url 'product_detail' product.id %}" class="btn btn-primary">Add to cart</a>
+                                </div>
                             </div>
                         </div>
                     </div>
