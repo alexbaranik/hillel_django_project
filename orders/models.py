@@ -60,3 +60,15 @@ class Order(PKMixin):
                         self.total_amount / 100 * self.discount.amount
                         ).quantize(Decimal('1.00'))
         return self.total_amount
+
+
+class OrderItems(PKMixin):
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.CASCADE
+    )
+    item = models.ForeignKey(
+        "products.Product",
+        on_delete=models.CASCADE
+    )
+    quantity = models.PositiveSmallIntegerField(default=1)
