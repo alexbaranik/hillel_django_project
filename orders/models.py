@@ -46,6 +46,8 @@ class Order(PKMixin):
         null=True,
         blank=True
     )
+    is_ordered = models.BooleanField(default=True)
+    is_paid = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return f'{self.user} | {self.total_amount}'
