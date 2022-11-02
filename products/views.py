@@ -31,6 +31,9 @@ def products(request, *args, **kwargs):
 class ProductsView(ListView):
     model = Product
 
+    def get_queryset(self):
+        return self.model.get_products()
+
 
 class ProductDetail(DetailView):
     model = Product

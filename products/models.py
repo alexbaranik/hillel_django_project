@@ -1,6 +1,7 @@
 from os import path
 
 from django.db import models
+from django.core.cache import cache
 
 from shop.constants import MAX_DIGITS, DECIMAL_PLACES
 from shop.mixins.models_mixins import PKMixin
@@ -53,3 +54,17 @@ class Product(PKMixin):
 
     def __str__(self) -> str:
         return f'{self.name} | {self.price} | {self.sku}'
+
+    @classmethod
+    def _cache_key(cls):
+        return 'products'
+
+    @classmethod
+    def get_products(cls):
+        products = cache.get(cls._cache_key())
+        print('BEFORE ', products)
+        if not products:
+            products = Product.objects.all()
+            cache.set(cls._cache_key(), products)
+            print('AFTER ', products)
+        return products
