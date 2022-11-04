@@ -1,9 +1,13 @@
 from os import path
+from decimal import Decimal
 
 from django.db import models
+from django.core.cache import cache
 
 from shop.constants import MAX_DIGITS, DECIMAL_PLACES
 from shop.mixins.models_mixins import PKMixin
+from shop.model_choices import Currency
+from currencies.models import CurrencyHistory
 
 
 def upload_image(instance, filename):
@@ -38,6 +42,11 @@ class Product(PKMixin):
         decimal_places=DECIMAL_PLACES,
         default=0
         )
+    currency = models.CharField(
+        max_length=3,
+        choices=Currency.choices,
+        default=Currency.UAH
+    )
     sku = models.CharField(
         max_length=32,
         blank=True,
@@ -45,5 +54,26 @@ class Product(PKMixin):
     )
     products = models.ManyToManyField('products.Product', blank=True)
 
+    @property
+    def get_price(self):
+        if self.currency != Currency.UAH:
+            kurs = CurrencyHistory.objects.filter(
+                currency=self.currency
+                ).order_by('-created_at').first()
+            return Decimal(self.price * kurs.sale).quantize(Decimal('1.00'))
+        return self.price
+
     def __str__(self) -> str:
         return f'{self.name} | {self.price} | {self.sku}'
+
+    @classmethod
+    def _cache_key(cls):
+        return 'products'
+
+    @classmethod
+    def get_products(cls):
+        products = cache.get(cls._cache_key())
+        if not products:
+            products = Product.objects.all()
+            cache.set(cls._cache_key(), products)
+        return products

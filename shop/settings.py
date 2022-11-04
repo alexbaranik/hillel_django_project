@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import environ
 from pathlib import Path
 
+from celery.schedules import crontab
 from django.urls import reverse_lazy
 
 
@@ -52,12 +53,14 @@ INSTALLED_APPS = [
     # external apps
     'django_extensions',
     'django_celery_results',
+    'django_celery_beat',
     # own apps
     'products',
     'orders',
     'feedbacks',
     'users',
     'main',
+    'currencies',
 ]
 
 MIDDLEWARE = [
@@ -156,3 +159,17 @@ LOGIN_URL = reverse_lazy('login')
 CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='CELERY_BROKER_URL')
 CELERY_RESULT_BACKEND = 'django_celery_results.backends.database.DatabaseBackend' # noqa
 CELERY_IMPORTS = ('shop.tasks',)
+
+CELERY_BEAT_SCHEDULE = {
+    'Get currency': {
+        'task': 'currencies.tasks.get_currencies',
+        'schedule': crontab(hour='10', minute='1'),
+    }
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+        'LOCATION': env('MEMCACHE_LOCATION', default='MEMCACHE_LOCATION'),
+    }
+}

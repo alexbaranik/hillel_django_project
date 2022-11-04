@@ -11,7 +11,7 @@
                     <p class="card-text">{{ product.sku }}</p>
                     <p class="card-text">{{ product.description|truncatewords:16 }}</p>
                     <div class="text-left">
-                        <div class="h4">{{ product.price }} UAH</div>
+                        <div class="h4">{{ product.get_price }} UAH</div>
                     </div>
                 </div>
             </div>

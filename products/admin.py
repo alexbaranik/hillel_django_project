@@ -7,7 +7,7 @@ from products.models import Product, Category
 @admin.register(Product)
 class ProductAdmin(ImageMixins, admin.ModelAdmin):
     filter_horizontal = ('products',)
-    list_display = ('name', 'price', 'sku', 'created_at',)
+    list_display = ('name', 'price', 'currency', 'sku', 'created_at',)
     list_filter = ('price', 'category',)
     readonly_fields = ('id',)
 
