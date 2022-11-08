@@ -12,6 +12,11 @@
                     <p class="card-text">{{ product.description|truncatewords:16 }}</p>
                     <div class="text-left">
                         <div class="h4">{{ product.get_price }} UAH</div>
+                        <form action="{% url 'cart_add' product.id %}" method="post">
+                            {{ cart_product_form }}
+                            {% csrf_token %}
+                            <input type="submit" value="Add to cart">
+                        </form>
                     </div>
                 </div>
             </div>

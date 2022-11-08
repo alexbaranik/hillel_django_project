@@ -23,10 +23,12 @@ from main.urls import urlpatterns as main_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(products_urlpatterns)),
+    path('cart/', include('cart.urls')),
+    path('orders/', include('orders.urls')),
     path('feedbacks/', include('feedbacks.urls')),
     path('', include(users_urlpatterns)),
     path('', include(main_urlpatterns)),
+    path('', include(products_urlpatterns)),
 ]
 
 if settings.DEBUG:

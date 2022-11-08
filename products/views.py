@@ -12,6 +12,7 @@ from weasyprint import HTML
 
 from products.model_forms import ProductModelForm
 from products.models import Product, Category
+from cart.forms import CartAddProductForm
 
 
 def products(request, *args, **kwargs):
@@ -34,9 +35,21 @@ class ProductsView(ListView):
     def get_queryset(self):
         return self.model.get_products()
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cart_product_form = CartAddProductForm()
+        context.update({'cart_product_form': cart_product_form})
+        return context
+
 
 class ProductDetail(DetailView):
     model = Product
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cart_product_form = CartAddProductForm()
+        context.update({'cart_product_form': cart_product_form})
+        return context
 
 
 @login_required

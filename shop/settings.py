@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'users',
     'main',
     'currencies',
+    'cart',
 ]
 
 MIDDLEWARE = [
@@ -150,6 +151,8 @@ MEDIA_ROOT = 'media'
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
+CART_SESSION_ID = 'cart'
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGOUT_REDIRECT_URL = reverse_lazy('main')
@@ -173,3 +176,5 @@ CACHES = {
         'LOCATION': env('MEMCACHE_LOCATION', default='MEMCACHE_LOCATION'),
     }
 }
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
