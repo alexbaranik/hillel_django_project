@@ -3,9 +3,10 @@ import decimal
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
+from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, TemplateView
 
 from weasyprint import HTML
@@ -120,3 +121,26 @@ class ExportPDF(TemplateView):
         context.update({'products': Product.objects.all(),
                         'domain': settings.DOMAIN})
         return context
+
+
+@login_required
+def favorites(request, product_id):
+    user = request.user
+    product = get_object_or_404(Product, pk=product_id)
+    if product.favorites.filter(id=user.id).exist():
+        product.favorites.remove(user)
+    else:
+        product.favorites.add(user)
+    return HttpResponseRedirect(reverse_lazy('products'))
+
+
+@login_required
+def product_favorite_list(request):
+    user = request.user
+    favorite_products = user.favorites.all()
+    cart_product_form = CartAddProductForm()
+    context = {
+        'favorite_products': favorite_products,
+        'cart_product_form': cart_product_form
+    }
+    return render(request, 'favorites/product_favorite_list.html', context)

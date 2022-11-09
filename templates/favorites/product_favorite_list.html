@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  <section>
+    <div class="container">
+      <div class="row row-cols-1 row-cols-md-4 g-4">
+        {% for product in favorite_products %}
+          <div class="col">
+            <div class="card h-100">
+              <a href="{% url 'product_detail' product.id %}">
+                <img src="{{ product.image.url }}"
+                     class="product-image"
+                     alt="{{ product.name }}"
+                     height="200"
+                     width="200">
+              </a>
+              <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text">{{ product.description|truncatewords:16 }}</p>
+                <div class="text-left">
+                  <div class="h4">{{ product.get_price }} UAH</div>
+                </div>
+                {% comment %} <div>
+                   {% if is_favourite %}
+                        <a href="{% url 'favorites' product.id %}">
+                        <i class="fas fa-heart fa-lg"></i>
+                        </a>
+                    {% else %}
+                        <a href="{% url 'favorites' product.id %}">
+                        <i class="far fa-heart fa-lg"></i>
+                        </a>
+                    {% endif %}
+                </div> {% endcomment %}
+              </div>
+              <div class="card-footer">
+                <div class="text-center">
+                  <form action="{% url 'cart_add' product.id %}" method="post">
+                    {{ cart_product_form }}
+                    {% csrf_token %}
+                    <input type="submit" value="Add to cart">
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endblock content %}

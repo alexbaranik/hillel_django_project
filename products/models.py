@@ -3,6 +3,7 @@ from decimal import Decimal
 
 from django.db import models
 from django.core.cache import cache
+from django.contrib.auth import get_user_model
 
 from shop.constants import MAX_DIGITS, DECIMAL_PLACES
 from shop.mixins.models_mixins import PKMixin
@@ -52,7 +53,15 @@ class Product(PKMixin):
         blank=True,
         null=True
     )
-    products = models.ManyToManyField('products.Product', blank=True)
+    products = models.ManyToManyField(
+        'products.Product',
+        blank=True
+    )
+    favorites = models.ManyToManyField(
+        get_user_model(),
+        related_name='favorites',
+        blank=True
+    )
 
     @property
     def get_price(self):
