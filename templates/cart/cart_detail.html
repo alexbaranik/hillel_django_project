@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-lg-10 offset-lg-1">
+          {% if cart %}
+            <h1>Your shopping cart</h1>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Image</th>
+                  <th scope="col">Product</th>
+                  <th scope="col">Quantity</th>
+                  <th scope="col">Remove</th>
+                  <th scope="col">Unit price</th>
+                  <th scope="col">Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in cart %}
+                  {% with product=item.product %}
+                    <tr>
+                      <td>
+                        <a href="{{ product.get_absolute_url }}">
+                          <img src="{% if product.image %}{{ product.image.url }} {% else %}{% static "img/no_image.png" %}{% endif %}"
+                               height="70"
+                               width="70">
+                        </a>
+                      </td>
+                      <td>{{ product.name }}</td>
+                      <td>
+                        <form action="{% url "cart_add" product.id %}" method="post">
+                          {{ item.update_quantity_form.quantity }}
+                          {{ item.update_quantity_form.override }}
+                          <input type="submit" value="Update">
+                          {% csrf_token %}
+                        </form>
+                      </td>
+                      <td>
+                        <form action="{% url "cart_remove" product.id %}" method="post">
+                          <input type="submit" value="Remove">
+                          {% csrf_token %}
+                        </form>
+                      </td>
+                      <td class="num">{{ item.price }} UAH</td>
+                      <td class="num">{{ item.total_price }} UAH</td>
+                    </tr>
+                  {% endwith %}
+                {% endfor %}
+                <tr class="total">
+                  <td>Total</td>
+                  <td colspan="4"></td>
+                  <td class="num">{{ cart.get_total_price }} UAH</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="text-right">
+              <a href="{% url "products" %}" class="btn btn-primary">Continue shopping</a>
+              <a href="{% url "order_create" %}" class="btn btn-primary">Checkout</a>
+            </p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

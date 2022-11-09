@@ -4,7 +4,7 @@
   <section>
     <div class="container">
       <div class="row row-cols-1 row-cols-md-4 g-4">
-        {% for product in object_list %}
+        {% for product in favorite_products %}
           <div class="col">
             <div class="card h-100">
               <a href="{% url 'product_detail' product.id %}">
@@ -20,6 +20,17 @@
                 <div class="text-left">
                   <div class="h4">{{ product.get_price }} UAH</div>
                 </div>
+                {% comment %} <div>
+                   {% if is_favourite %}
+                        <a href="{% url 'favorites' product.id %}">
+                        <i class="fas fa-heart fa-lg"></i>
+                        </a>
+                    {% else %}
+                        <a href="{% url 'favorites' product.id %}">
+                        <i class="far fa-heart fa-lg"></i>
+                        </a>
+                    {% endif %}
+                </div> {% endcomment %}
               </div>
               <div class="card-footer">
                 <div class="text-center">
