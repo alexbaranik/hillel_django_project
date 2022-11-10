@@ -20,6 +20,9 @@
                 <div class="text-left">
                   <div class="h4">{{ product.get_price }} UAH</div>
                 </div>
+                {% comment %} {% if product.favorites.filter(id=user.id).exists %}
+                <p class="card-text">{{ product.description|truncatewords:16 }}</p>
+                {% endif %} {% endcomment %}
               </div>
               <div class="card-footer">
                 <div class="text-center">

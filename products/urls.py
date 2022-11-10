@@ -26,6 +26,6 @@ urlpatterns = [
     path('products/pdf/', ExportPDF.as_view(), name='export_pdf'),
     path('products/import/', import_csv, name='import_csv'),
     path('favorites/', product_favorite_list, name='favorites'),
-    path('favorites/<uuid:pk>/add/', favorites,
+    path('favorites/<uuid:product_id>/add/', favorites,
          name='add_or_remove_favorite'),
 ]
