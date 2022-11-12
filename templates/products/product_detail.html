@@ -13,13 +13,9 @@
                     <div class="text-left">
                         {% comment %} {% if is_favourite %} {% endcomment %}
                              <a href="{% url 'add_or_remove_favorite' product.id %}">
-                             <i class="fas fa-heart fa-lg"></i>
+                             <i class="fas fa-heart fa-lg">Favorit</i>
                              </a>
-                         {% comment %} {% else %}
-                             <a href="{% url 'add_or_remove_favorite' product.id %}">
-                             <i class="far fa-heart fa-lg"></i>
-                             </a>
-                         {% endif %} {% endcomment %}
+
                     </div>
                     <div class="text-left">
                         <div class="h4">{{ product.get_price }} UAH</div>

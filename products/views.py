@@ -34,12 +34,15 @@ class ProductsView(ListView):
     model = Product
 
     def get_queryset(self):
-        return self.model.get_products()
+        return self.model.get_products().prefetch_related('favorites')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         cart_product_form = CartAddProductForm()
-        context.update({'cart_product_form': cart_product_form})
+        context.update({
+            'cart_product_form': cart_product_form,
+            'user': self.request.user
+        })
         return context
 
 
@@ -126,8 +129,8 @@ class ExportPDF(TemplateView):
 @login_required
 def favorites(request, product_id):
     user = request.user
-    product = get_object_or_404(Product, pk=product_id)
-    if product.favorites.filter(id=user.id).exist():
+    product = get_object_or_404(Product, id=product_id)
+    if product.favorites.filter(id=user.id).exists():
         product.favorites.remove(user)
     else:
         product.favorites.add(user)
