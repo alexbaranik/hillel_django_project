@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 
@@ -17,6 +18,8 @@ def cart_add(request, product_id):
                  quantity=cd['quantity'],
                  update_quantity=cd['override']
                  )
+    messages.success(request,
+                     f'Product {product.name} added to cart!')
     return redirect('cart_detail')
 
 
@@ -25,6 +28,8 @@ def cart_remove(request, product_id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
     cart.remove(product)
+    messages.info(request,
+                  f'Product {product.name} remove from cart!')
     return redirect('cart_detail')
 
 
