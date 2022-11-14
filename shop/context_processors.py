@@ -1,4 +1,8 @@
+from config.models import Config
+
+
 def own_settings(request) -> dict:
+    our_conf = Config.load()
     return {
-        'MYVARIABLE': True
+        'ADMIN_EMAIL': our_conf.contact_form_email,
     }

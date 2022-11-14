@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'main',
     'currencies',
     'cart',
+    'config',
 ]
 
 MIDDLEWARE = [
