@@ -1,4 +1,3 @@
-import email
 from django import forms
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm,\
@@ -13,10 +12,12 @@ class CustomAuthenticationForm(AuthenticationForm):
                              required=False)
     phone = forms.CharField(required=False)
 
+    field_order = ['username', 'phone', 'password']
+
     def clean(self):
         username = self.cleaned_data.get('username')
-        password = self.cleaned_data.get('password')
         phone = self.cleaned_data.get('phone')
+        password = self.cleaned_data.get('password')
 
         if not username and not phone:
             raise ValidationError('Email or phone number is required.')
