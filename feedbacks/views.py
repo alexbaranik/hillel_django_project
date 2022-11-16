@@ -13,6 +13,7 @@ def feedbacks(request, *args, **kwargs):
             user=user,
             data=request.POST
         )
+        # breakpoint()
         if form.is_valid():
             form.save()
     else:
