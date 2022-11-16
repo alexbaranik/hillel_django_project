@@ -40,6 +40,10 @@ DOMAIN = env('DOMAIN', default='http://127.0.0.1:8000')
 
 ALLOWED_HOSTS = env('ALLOWED_HOSTS', default='').split(',')
 
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
 
 # Application definition
 
@@ -54,6 +58,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'django_celery_results',
     'django_celery_beat',
+    'debug_toolbar',
     # own apps
     'products',
     'orders',
@@ -63,6 +68,7 @@ INSTALLED_APPS = [
     'currencies',
     'cart',
     'config',
+    'silk',
 ]
 
 MIDDLEWARE = [
@@ -73,6 +79,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'silk.middleware.SilkyMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'shop.urls'

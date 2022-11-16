@@ -34,7 +34,8 @@ class ProductsView(ListView):
     model = Product
 
     def get_queryset(self):
-        return self.model.get_products().prefetch_related('favorites')
+        # return self.model.get_products().prefetch_related('favorites')
+        return self.model.get_products()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
