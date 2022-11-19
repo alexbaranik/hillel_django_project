@@ -26,9 +26,7 @@ class Feedback(PKMixin):
     @classmethod
     def get_feedbacks(cls):
         feedbacks = cache.get(cls._cache_key())
-        print('BEFORE ', feedbacks)
         if not feedbacks:
             feedbacks = Feedback.objects.all()
             cache.set(cls._cache_key(), feedbacks)
-            print('AFTER ', feedbacks)
         return feedbacks
