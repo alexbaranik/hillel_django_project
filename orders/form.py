@@ -1,5 +1,5 @@
 from django import forms
-from pyparsing import Or
+
 from orders.models import Order
 
 

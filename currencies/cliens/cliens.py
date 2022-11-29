@@ -86,4 +86,4 @@ class MonoBankAPI(GetCurrencyBaseClient):
 currency_clients = [
     PrivatBankAPI(),
     MonoBankAPI()
-    ]
+]
