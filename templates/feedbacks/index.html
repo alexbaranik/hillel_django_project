@@ -9,15 +9,11 @@
             {% csrf_token %}
             {% for field in form %}
               <label>{{ field.label }}</label>
-              {% if field.lable == "User" %}
-                {{ field }}
-              {% else %}
                 <input type="{{ field.field.widget.input_type }}"
                        name="{{ field.name }}"
                        id="{{ field.auto_id }}"
                        value="{% if field.initial %}{{ field.initial }}{% endif %}"
                        class="form-control">
-              {% endif %}
               {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
               {% if field.errors %}
                 <div class="mb-2">
@@ -55,31 +51,3 @@
     </div>
   </section>
 {% endblock content %}
-{% comment %} <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1>Feedbacks</h1>
-
-{% for item in feedbacks %}
-    <p>
-        <span>Text: {{ item.text }}</span>
-        <span>User: {{ item.user }}</span>
-        <span>Rating: {{ item.rating }}</span>
-    </p>
-{% endfor %}
-<div>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {% for field in form %}
-            <label>{{ field.label }}</label>
-            {{ field }}
-        {% endfor %}
-        <input type="submit" value="Create feedback">
-    </form>
-</div>
-</body>
-</html> {% endcomment %}

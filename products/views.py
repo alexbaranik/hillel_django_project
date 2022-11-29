@@ -16,26 +16,26 @@ from products.models import Product, Category
 from cart.forms import CartAddProductForm
 
 
-def products(request, *args, **kwargs):
-    if request.method == 'POST':
-        form = ProductModelForm(request.POST, files=request.FILES)
-        if form.is_valid():
-            form.save()
-    else:
-        form = ProductModelForm()
-    context = {
-        'items': Product.objects.all(),
-        'form': form
-    }
-    return render(request, 'products/index.html', context=context)
+# def products(request, *args, **kwargs):
+#     if request.method == 'POST':
+#         form = ProductModelForm(request.POST, files=request.FILES)
+#         if form.is_valid():
+#             form.save()
+#     else:
+#         form = ProductModelForm()
+#     context = {
+#         'items': Product.objects.all(),
+#         'form': form
+#     }
+#     return render(request, 'products/index.html', context=context)
 
 
 class ProductsView(ListView):
     model = Product
 
     def get_queryset(self):
-        # return self.model.get_products().prefetch_related('favorites')
-        return self.model.get_products()
+        return self.model.get_products().prefetch_related('favorites')
+        # return self.model.get_products()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
