@@ -1,8 +1,13 @@
 import pytest
+import tempfile
+from decimal import Decimal
+from faker import Faker
+
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from faker import Faker
 from django.test.client import Client
+
+from products.models import Product, Category
 
 fake = Faker()
 User = get_user_model()
@@ -54,3 +59,31 @@ def login_user(db):
                                                    'password': password})
     assert response.status_code == 302
     yield client, user
+
+
+@pytest.fixture(scope='function')
+def product(db, faker):
+    category = Category.objects.create(
+        name=faker.word(),
+        description=faker.text()
+    )
+    name = faker.word()
+    description = faker.text()
+    price = Decimal('20.40')
+    currency = 'UAH'
+    sku = '392847'
+    image = tempfile.NamedTemporaryFile(suffix=".jpg").name
+
+    product = Product.objects.create(
+        name=name,
+        description=description,
+        image=image,
+        category=category,
+        price=price,
+        currency=currency,
+        sku=sku
+    )
+
+    assert Product.objects.exists()
+
+    yield product

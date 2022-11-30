@@ -1,11 +1,17 @@
 from django.urls import reverse
 from django.core import mail
 
+from config.models import Config
+
 
 def test_main_page(client, faker):
     response = client.get(reverse('main'))
     assert response.status_code == 200
     assert b"McDonald's Corporation" in response.content
+
+    contact_email, _ = Config.objects.get_or_create(
+        contact_form_email = 'baranikav@gmail.com'
+    )
 
     data = {
         'email': faker.word(),

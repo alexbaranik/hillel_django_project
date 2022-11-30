@@ -5,33 +5,9 @@ from django.urls import reverse
 from products.models import Product, Category
 
 
-def test_products(login_user, client, faker):
-    url = reverse('products')
-    
-    category = Category.objects.create(
-        name=faker.word(),
-        description=faker.text()
-    )
-    name = faker.word()
-    description = faker.text()
-    price = Decimal('20.40')
-    currency = 'UAH'
-    sku = '392847'
-    image = tempfile.NamedTemporaryFile(suffix=".jpg").name
+def test_products(login_user, client, faker, product):
 
-    product = Product.objects.create(
-        name=name,
-        description=description,
-        image=image,
-        category=category,
-        price=price,
-        currency=currency,
-        sku=sku
-    )
-
-    assert Product.objects.exists()
-
-    response = client.get(url)
+    response = client.get(reverse('products'))
     assert response.status_code == 200
 
     response = client.get(reverse('product_detail', args=(product.id,)))
@@ -72,28 +48,7 @@ def test_import_csv(login_user, client):
     assert b'Import success!' in response.content 
 
 
-def test_export_(login_user, client, faker):
-
-    category = Category.objects.create(
-        name=faker.word(),
-        description=faker.text()
-    )
-    name = faker.word()
-    description = faker.text()
-    price = Decimal('20.40')
-    currency = 'UAH'
-    sku = '392847'
-    image = tempfile.NamedTemporaryFile(suffix=".jpg").name
-
-    product = Product.objects.create(
-        name=name,
-        description=description,
-        image=image,
-        category=category,
-        price=price,
-        currency=currency,
-        sku=sku
-    )
+def test_export_(login_user, client, faker, product):
 
     response = client.post(reverse('export_csv'), follow=True)
     assert response.status_code == 200
@@ -105,28 +60,7 @@ def test_export_(login_user, client, faker):
     assert b'name,description,category,price,sku,image\r\n' in response.content 
 
 
-# def test_ExportPDF(login_user, client, faker):
-
-#     category = Category.objects.create(
-#         name=faker.word(),
-#         description=faker.text()
-#     )
-#     name = faker.word()
-#     description = faker.text()
-#     price = Decimal('20.40')
-#     currency = 'UAH'
-#     sku = '392847'
-#     image = tempfile.NamedTemporaryFile(suffix=".jpg").name
-
-#     product = Product.objects.create(
-#         name=name,
-#         description=description,
-#         image=image,
-#         category=category,
-#         price=price,
-#         currency=currency,
-#         sku=sku
-#     )
+# def test_ExportPDF(login_user, client, faker, product):
 
 #     response = client.get(reverse('export_pdf'))
 #     assert response.status_code == 200
