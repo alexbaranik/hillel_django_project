@@ -2,12 +2,15 @@ import pytest
 import tempfile
 from decimal import Decimal
 from faker import Faker
+import factory
 
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.test.client import Client
+from pytest_factoryboy import register
 
 from products.models import Product, Category
+from shop.constants import DECIMAL_PLACES
 
 fake = Faker()
 User = get_user_model()
@@ -46,9 +49,7 @@ def user(db):
 def login_user(db):
     phone = '123456789'
     password = '123456789'
-    user, _ = User.objects.get_or_create(
-        email='user@user.com',
-        first_name='John Smith',
+    user = UserFactory(
         phone=phone,
         is_phone_valid=True
     )
@@ -61,29 +62,49 @@ def login_user(db):
     yield client, user
 
 
-@pytest.fixture(scope='function')
-def product(db, faker):
-    category = Category.objects.create(
-        name=faker.word(),
-        description=faker.text()
-    )
-    name = faker.word()
-    description = faker.text()
-    price = Decimal('20.40')
-    currency = 'UAH'
-    sku = '392847'
-    image = tempfile.NamedTemporaryFile(suffix=".jpg").name
+@register
+class UserFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = get_user_model()
+        django_get_or_create = ('email',) 
+    
+    email = factory.Sequence(lambda x: fake.email())
+    first_name = factory.Sequence(lambda x: fake.name())
+    last_name = factory.Sequence(lambda x: fake.name())
 
-    product = Product.objects.create(
-        name=name,
-        description=description,
-        image=image,
-        category=category,
-        price=price,
-        currency=currency,
-        sku=sku
-    )
 
-    assert Product.objects.exists()
+@register
+class CategoryFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Category
+        django_get_or_create = ('name',)
 
-    yield product
+    name = factory.Sequence(lambda x: fake.word())
+    description = factory.Sequence(lambda x: fake.text())
+    image = factory.django.ImageField()
+
+
+@register
+class ProductFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Product
+        django_get_or_create = ('name', 'category',)
+
+    name = factory.Sequence(lambda x: fake.name())
+    description = factory.Sequence(lambda x: fake.text())
+    image = factory.django.ImageField()
+    price = factory.Sequence(lambda x: fake.pydecimal(
+        min_value=1,
+        left_digits=DECIMAL_PLACES,
+        right_digits=DECIMAL_PLACES
+    ))
+    sku = factory.Sequence(lambda x: fake.word())
+    category = factory.SubFactory(CategoryFactory)
+
+    @factory.post_generation
+    def post_create(self, created, *args, **kwargs):
+        if created and not kwargs.get('deny_post'):
+            for _ in range(1, 3):
+                self.products.add(
+                    ProductFactory(post_create__deny_post=True)
+                )
