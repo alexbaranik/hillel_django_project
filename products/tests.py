@@ -1,12 +1,8 @@
-import tempfile
-from decimal import Decimal
-from django.shortcuts import redirect
 from django.urls import reverse
-from products.models import Product, Category
 
 
-def test_products(login_user, client, faker, product):
-
+def test_products(login_user, client, product_factory):
+    product = product_factory()
     response = client.get(reverse('products'))
     assert response.status_code == 200
 
@@ -48,7 +44,7 @@ def test_import_csv(login_user, client):
     assert b'Import success!' in response.content 
 
 
-def test_export_(login_user, client, faker, product):
+def test_export_(login_user, client):
 
     response = client.post(reverse('export_csv'), follow=True)
     assert response.status_code == 200
@@ -60,12 +56,12 @@ def test_export_(login_user, client, faker, product):
     assert b'name,description,category,price,sku,image\r\n' in response.content 
 
 
-# def test_ExportPDF(login_user, client, faker, product):
+def test_ExportPDF(login_user):
 
-#     response = client.get(reverse('export_pdf'))
-#     assert response.status_code == 200
-#     assert b'Email address' in response.content
+    # response = client.get(reverse('export_pdf'))
+    # assert response.status_code == 200
+    # assert b'Email address' in response.content
 
-#     client, user = login_user
-#     response = client.get(reverse('export_pdf'))
-#     assert response.status_code == 200
+    client, user = login_user
+    response = client.get(reverse('export_pdf'))
+    assert response.status_code == 200
