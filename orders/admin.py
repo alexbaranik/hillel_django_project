@@ -6,6 +6,7 @@ from orders.models import Order, Discount, OrderItems
 
 class OrderItemsInline(admin.TabularInline):
     model = OrderItems
+    extra = 0
     raw_id_fields = ['product']
 
 
