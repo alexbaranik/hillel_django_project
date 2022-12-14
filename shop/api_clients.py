@@ -8,22 +8,21 @@ logger = logging.getLogger(__name__)
 class BaseClient:
     base_url = None
 
-    def get_request(
-        self,
-        method: str,
-        params: dict = None,
-        headers: dict = None,
-        data: dict = None,
-        url: str = None
-    ) -> dict | bytes:
+    def get_request(self,
+                    method: str,
+                    params: dict = None,
+                    headers: dict = None,
+                    data: dict = None,
+                    url: str = None
+                    ) -> dict | bytes:
         try:
             response = request(
-                url=url or self.base_url,
-                method=method,
-                params=params or {},
-                data=data or {},
-                headers=headers or {}
-            )
+                            url=url or self.base_url,
+                            method=method,
+                            params=params or {},
+                            data=data or {},
+                            headers=headers or {}
+                        )
             json_response = response.json()
         except (exceptions.ConnectionError, exceptions.Timeout) as err:
             logger.error(err)
