@@ -37,16 +37,14 @@ class Parser(BaseClient):
                         ).text.replace('\xa0', '').split('г')[0]
                     image_url = element.find(
                         'img', class_="b-product-gallery__image").attrs['src']
-                    product_list.append(
-                        {
-                            'name': name,
-                            'description': name,
-                            'price': price,
-                            'sku': sku,
-                            'category': category_name,
-                            'image': image_url
-                        }
-                    )
+                    product_list.append({
+                                            'name': name,
+                                            'description': name,
+                                            'price': price,
+                                            'sku': sku,
+                                            'category': category_name,
+                                            'image': image_url
+                                        })
                 except (AttributeError, KeyError) as err:
                     logger.error(err)
             return product_list
