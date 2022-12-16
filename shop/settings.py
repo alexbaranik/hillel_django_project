@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'django_celery_results',
     'django_celery_beat',
     'debug_toolbar',
+    'widget_tweaks',
     # own apps
     'products',
     'orders',

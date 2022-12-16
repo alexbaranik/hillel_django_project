@@ -2,6 +2,7 @@ import csv
 import decimal
 
 from django.conf import settings
+from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
@@ -11,7 +12,7 @@ from django.views.generic import ListView, DetailView, TemplateView
 
 from weasyprint import HTML
 
-from products.model_forms import ProductModelForm
+from products.model_forms import ProductFilterForm, ProductModelForm
 from products.models import Product, Category
 from cart.forms import CartAddProductForm
 
@@ -30,19 +31,49 @@ from cart.forms import CartAddProductForm
 #     return render(request, 'products/index.html', context=context)
 
 
+def products(request, *args, **kwargs):
+    page_number = request.GET.get('page')
+    paginator = Paginator(Product.objects.all(), 10)
+    pages = paginator.get_page(page_number)
+    cart_product_form = CartAddProductForm()
+    context = {
+        'object_list': pages,
+        'cart_product_form': cart_product_form,
+    }
+    return render(request, context=context,
+                  template_name='products/product_list.html')
+
+
 class ProductsView(ListView):
     model = Product
+    paginate_by = 10
+    filter_form = ProductFilterForm
+
+    def filtered_queryset(self, queryset):
+        category_id = self.request.GET.get('category')
+        currency = self.request.GET.get('currency')
+        name = self.request.GET.get('name')
+        if category_id:
+            queryset = queryset.filter(category_id=category_id)
+        if currency:
+            queryset = queryset.filter(currency=currency)
+        if name:
+            queryset = queryset.filter(name__icontains=name)
+        return queryset
 
     def get_queryset(self):
-        return self.model.get_products().prefetch_related('favorites')
-        # return self.model.get_products()
+        qs = self.model.get_products().prefetch_related('favorites')
+        qs = self.filtered_queryset(qs)
 
-    def get_context_data(self, **kwargs):
+        return qs
+
+    def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         cart_product_form = CartAddProductForm()
         context.update({
             'cart_product_form': cart_product_form,
-            'user': self.request.user
+            'user': self.request.user,
+            'filter_form': self.filter_form,
         })
         return context
 

@@ -16,10 +16,11 @@ Including another URLconf
 from django.urls import path
 
 from products.views import ProductsView, ProductDetail, export_csv,\
-     import_csv, ExportPDF, favorites, product_favorite_list
+     import_csv, ExportPDF, favorites, product_favorite_list, products
 
 urlpatterns = [
     path('products/', ProductsView.as_view(), name='products'),
+    # path('products/', products, name='products'),
     path('products/<uuid:pk>/', ProductDetail.as_view(),
          name='product_detail'),
     path('products/csv/', export_csv, name='export_csv'),
