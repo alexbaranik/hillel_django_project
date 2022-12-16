@@ -1,10 +1,39 @@
 {% extends 'base.html' %}
-
 {% block content %}
-  <h1>Verify your account</h1>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Confirm</button>
-  </form>
-{% endblock %}
+    <section class="registration">
+        <div class="container">
+            <div class="row">
+                <div class="col col-lg-4 offset-lg-4">
+                    <h2>Confirm your account</h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <label>{{ field.label }}</label>
+                            <input type="{{ field.field.widget.input_type }}"
+                                   name="{{ field.name }}"
+                                   id="{{ field.auto_id }}"
+                                   value="{% if field.initial %}{{ field.initial }}{% endif %}"
+                                   class="form-control">
+                            {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+                            {% if field.errors %}
+                                <div class="mb-2">
+                                    <ul>
+                                        {% for error in field.errors %}<li class="text-danger small">{{ error }}</li>{% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                        {% if form.non_field_errors %}
+                            <div class="mb-2">
+                                <ul>
+                                    {% for error in form.non_field_errors %}<li class="text-danger small">{{ error }}</li>{% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                        <input class="btn btn-primary mt-3" type="submit" value="Confirm">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

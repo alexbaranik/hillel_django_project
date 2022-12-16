@@ -9,7 +9,6 @@ from django.core.exceptions import ValidationError
 from django.core.cache import cache
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
-from requests import request
 
 from shop.helper import send_html_mail
 from users.tasks import send_sms
