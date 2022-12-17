@@ -23,7 +23,7 @@ class UserAdmin(AuthUserAdmin):
         (None, {'fields': ('email', 'password')}),
         (_('Personal info'),
          {'fields': ('first_name', 'last_name', 'phone',
-                     'is_phone_valid', 'is_active')}),
+                     'is_phone_valid', 'is_active', 'is_staff')}),
         (_('Info'),
          {'fields': ('last_login', 'date_joined',)}),
     )
