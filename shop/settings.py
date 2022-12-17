@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'debug_toolbar',
     'widget_tweaks',
+    'rest_framework',
     # own apps
     'products',
     'orders',
