@@ -5,5 +5,8 @@
         <p>
             Your order has been successfully completed. Your order number is <strong>{{ order.id }}</strong>.
         </p>
+        <p>
+            <a href="{% url 'pay_order' order.id %}">Pay order</a>
+        </p>
     </div>
 {% endblock content %}
