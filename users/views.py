@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.core.cache import cache
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, get_backends, get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import LoginView as AuthLoginView
@@ -89,7 +89,7 @@ class RegistrationConfirmView(RedirectView):
 
 def confirm_code(request):
     if request.method == 'POST':
-        user = User.objects.get(id=request.session['user_id'])
+        user = get_object_or_404(User, id=request.session['user_id'])
         form = ConfirmCodeForm(request.POST)
         if form.is_valid():
             code = form.cleaned_data.get('code')

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from orders.models import OrderItems
+from orders.models import OrderItems, Discount
 from orders.form import OrderCreateForm
 from cart.cart import Cart
 
@@ -22,6 +22,12 @@ def order_create(request):
                     price=item['price'],
                     quantity=item['quantity']
                 )
+            try:
+                discount = form.cleaned_data['discount']
+                discount.is_active = False
+                discount.save()
+            except Exception:
+                ...
             cart.clear()
             return render(request, 'orders/created.html', {'order': order})
 
