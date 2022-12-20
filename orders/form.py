@@ -1,9 +1,14 @@
 from django import forms
 
-from orders.models import Order
+from orders.models import Order, Discount
 
 
 class OrderCreateForm(forms.ModelForm):
+    discount = forms.ModelChoiceField(
+        queryset=Discount.objects.filter(is_active=True),
+        required=False
+    )
+
     class Meta:
         model = Order
         fields = ['user', 'discount']
