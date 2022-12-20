@@ -66,8 +66,8 @@ class Order(LifecycleModelMixin, PKMixin):
     #     return self.total_amount
 
     def get_total_amount(self):
-        return self.items.annotate(
-            full_price=F('product__price') * F('quantity')
+        return Decimal(self.items.annotate(
+            full_price=F('price') * F('quantity')
         ).aggregate(
             total_amount=Case(
                 When(
@@ -84,7 +84,7 @@ class Order(LifecycleModelMixin, PKMixin):
                 default=Sum('full_price'),
                 output_field=models.DecimalField()
             )
-        ).get('total_amount') or 0
+        ).get('total_amount').quantize(Decimal('1.00'))) or 0
 
 
 class OrderItems(PKMixin):

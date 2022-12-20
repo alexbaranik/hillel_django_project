@@ -14,7 +14,7 @@ class OrderItemsInline(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     readonly_fields = ('overall_amount',)
     list_display = ('user', 'total_amount', 'discount', 'created_at',
-                    'overall_amount',)
+                    'overall_amount', 'is_paid')
     inlines = [OrderItemsInline]
 
     def overall_amount(self, instance):
@@ -23,4 +23,4 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(Discount)
 class DiscountAdmin(admin.ModelAdmin):
-    list_display = ('amount', 'code',)
+    list_display = ('amount', 'code', 'is_active')

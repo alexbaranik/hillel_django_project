@@ -3,6 +3,8 @@ import decimal
 
 from django.conf import settings
 from django.core.paginator import Paginator
+from django.db.models import OuterRef, Exists
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
@@ -64,16 +66,17 @@ class ProductsView(ListView):
     def get_queryset(self):
         qs = self.model.get_products().prefetch_related('favorites')
         qs = self.filtered_queryset(qs)
-
         return qs
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         cart_product_form = CartAddProductForm()
+        user_favorites = Product.objects.filter(favorites=self.request.user)
         context.update({
             'cart_product_form': cart_product_form,
             'user': self.request.user,
             'filter_form': self.filter_form,
+            'user_favorites': user_favorites
         })
         return context
 
