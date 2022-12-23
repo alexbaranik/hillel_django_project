@@ -60,7 +60,9 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'widget_tweaks',
     'rest_framework',
+    'rest_framework.authtoken',
     'drf_yasg',
+    'django_filters',
     # own apps
     'products',
     'orders',
@@ -211,3 +213,12 @@ ADMINS = [('Alex', env('ADMIN_EMAIL', default='ADMIN_EMAIL'))]
 MANAGERS = ADMINS
 EMAIL_SUBJECT_PREFIX = 'Super shop - '
 SERVER_EMAIL = EMAIL_HOST_USER
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'api.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+}

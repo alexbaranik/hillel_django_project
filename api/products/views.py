@@ -6,16 +6,18 @@ from rest_framework.response import Response
 
 from api.products.serializers import ProductSerializer, CategorySerializer
 from products.models import Category, Product
+from products.filters import ProductFilter
 
 
 class ProductsViewSet(
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
-    GenericViewSet
+    GenericViewSet,
 ):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [IsAuthenticated]
+    filterset_class = ProductFilter
 
 
 class CategoriesViewSet(
