@@ -6,7 +6,7 @@
       <div class="row">
         <div class="col-12">
           <form>
-            {% include 'parts/forms/simple_form.html' with form=filter_form %}
+            {% include 'parts/forms/filter_form.html' with form=filter.form %}
             <button class="btn btn-primary" type="submit">Filter</button>
           </form>
         </div>
@@ -63,9 +63,6 @@
                 <div class="text-left">
                   <div class="h4">{{ product.get_price }} UAH</div>
                 </div>
-                {% comment %} {% if product.favorites.filter(id=user.id).exists %}
-                <p class="card-text">{{ product.description|truncatewords:16 }}</p>
-                {% endif %} {% endcomment %}
               </div>
               <div class="card-footer">
                 <div class="text-center">

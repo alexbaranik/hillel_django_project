@@ -11,10 +11,12 @@ from django.template import loader
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, TemplateView
+from django_filters.views import FilterView
 
 from weasyprint import HTML
+from products.filters import ProductFilter
 
-from products.model_forms import ProductFilterForm, ProductModelForm
+from products.model_forms import ProductModelForm
 from products.models import Product, Category
 from cart.forms import CartAddProductForm
 
@@ -46,26 +48,14 @@ def products(request, *args, **kwargs):
                   template_name='products/product_list.html')
 
 
-class ProductsView(ListView):
+class ProductsView(FilterView):
     model = Product
     paginate_by = 10
-    filter_form = ProductFilterForm
-
-    def filtered_queryset(self, queryset):
-        category_id = self.request.GET.get('category')
-        currency = self.request.GET.get('currency')
-        name = self.request.GET.get('name')
-        if category_id:
-            queryset = queryset.filter(category_id=category_id)
-        if currency:
-            queryset = queryset.filter(currency=currency)
-        if name:
-            queryset = queryset.filter(name__icontains=name)
-        return queryset
+    filterset_class = ProductFilter
+    template_name_suffix = '_list'
 
     def get_queryset(self):
         qs = self.model.get_products().prefetch_related('favorites')
-        qs = self.filtered_queryset(qs)
         return qs
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -75,7 +65,6 @@ class ProductsView(ListView):
         context.update({
             'cart_product_form': cart_product_form,
             'user': self.request.user,
-            'filter_form': self.filter_form,
             'user_favorites': user_favorites
         })
         return context
