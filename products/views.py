@@ -2,50 +2,39 @@ import csv
 import decimal
 
 from django.conf import settings
-from django.core.paginator import Paginator
-from django.db.models import OuterRef, Exists
-from django.contrib.auth import get_user_model
+# from django.core.paginator import Paginator
+# from django.db.models import OuterRef, Exists
+# from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect,  JsonResponse
 from django.template import loader
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, TemplateView
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.views.generic import DetailView, TemplateView
 from django_filters.views import FilterView
 
 from weasyprint import HTML
 from products.filters import ProductFilter
 
-from products.model_forms import ProductModelForm
+# from products.model_forms import ProductModelForm
 from products.models import Product, Category
 from cart.forms import CartAddProductForm
+from shop.decorators import ajax_required
 
 
 # def products(request, *args, **kwargs):
-#     if request.method == 'POST':
-#         form = ProductModelForm(request.POST, files=request.FILES)
-#         if form.is_valid():
-#             form.save()
-#     else:
-#         form = ProductModelForm()
+#     page_number = request.GET.get('page')
+#     paginator = Paginator(Product.objects.all(), 10)
+#     pages = paginator.get_page(page_number)
+#     cart_product_form = CartAddProductForm()
 #     context = {
-#         'items': Product.objects.all(),
-#         'form': form
+#         'object_list': pages,
+#         'cart_product_form': cart_product_form,
 #     }
-#     return render(request, 'products/index.html', context=context)
-
-
-def products(request, *args, **kwargs):
-    page_number = request.GET.get('page')
-    paginator = Paginator(Product.objects.all(), 10)
-    pages = paginator.get_page(page_number)
-    cart_product_form = CartAddProductForm()
-    context = {
-        'object_list': pages,
-        'cart_product_form': cart_product_form,
-    }
-    return render(request, context=context,
-                  template_name='products/product_list.html')
+#     return render(request, context=context,
+#                   template_name='products/product_list.html')
 
 
 class ProductsView(FilterView):
@@ -93,12 +82,12 @@ def export_csv(request):
     for product in Product.objects.iterator():
         writer.writerow(
             [
-             product.name,
-             product.description,
-             product.price,
-             product.sku,
-             product.category,
-             settings.DOMAIN + product.image.url
+                product.name,
+                product.description,
+                product.price,
+                product.sku,
+                product.category,
+                settings.DOMAIN + product.image.url
             ]
         )
     return response
@@ -171,3 +160,22 @@ def product_favorite_list(request):
         'cart_product_form': cart_product_form
     }
     return render(request, 'favorites/product_favorite_list.html', context)
+
+
+class AJAXFavoriteProductAddOrRemoveView(DetailView):
+    model = Product
+
+    @method_decorator(ajax_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        product = self.get_object()
+        created = product.favorites.filter(id=user.id).exists()
+        if created:
+            product.favorites.remove(user)
+        else:
+            product.favorites.add(user)
+
+        return JsonResponse(data={'created': created})
