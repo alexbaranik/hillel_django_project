@@ -44,13 +44,19 @@ class ProductsView(FilterView):
     template_name_suffix = '_list'
 
     def get_queryset(self):
-        qs = self.model.get_products().prefetch_related('favorites')
+        qs = self.model.get_products().select_related('category')
+        qs = qs.prefetch_related('products')
         return qs
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         cart_product_form = CartAddProductForm()
-        user_favorites = Product.objects.filter(favorites=self.request.user)
+        try:
+            user_favorites = Product.objects.filter(
+                favorites=self.request.user
+            )
+        except TypeError:
+            user_favorites = None
         context.update({
             'cart_product_form': cart_product_form,
             'user': self.request.user,
@@ -139,15 +145,15 @@ class ExportPDF(TemplateView):
         return context
 
 
-@login_required
-def favorites(request, product_id):
-    user = request.user
-    product = get_object_or_404(Product, id=product_id)
-    if product.favorites.filter(id=user.id).exists():
-        product.favorites.remove(user)
-    else:
-        product.favorites.add(user)
-    return HttpResponseRedirect(reverse_lazy('products'))
+# @login_required
+# def favorites(request, product_id):
+#     user = request.user
+#     product = get_object_or_404(Product, id=product_id)
+#     if product.favorites.filter(id=user.id).exists():
+#         product.favorites.remove(user)
+#     else:
+#         product.favorites.add(user)
+#     return HttpResponseRedirect(reverse_lazy('products'))
 
 
 @login_required

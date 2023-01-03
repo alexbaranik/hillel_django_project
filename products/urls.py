@@ -16,7 +16,7 @@ Including another URLconf
 from django.urls import path
 
 from products.views import AJAXFavoriteProductAddOrRemoveView, ProductsView, \
-    ProductDetail, export_csv, import_csv, ExportPDF, favorites, \
+    ProductDetail, export_csv, import_csv, ExportPDF, \
     product_favorite_list
 
 urlpatterns = [
@@ -27,8 +27,8 @@ urlpatterns = [
     path('products/pdf/', ExportPDF.as_view(), name='export_pdf'),
     path('products/import/', import_csv, name='import_csv'),
     path('favorites/', product_favorite_list, name='favorites'),
-    path('favorites/<uuid:pk>/', favorites,
-         name='add_or_remove_favorite'),
+    # path('favorites/<uuid:pk>/', favorites,
+    #      name='add_or_remove_favorite'),
     path('ajax-favorites/<uuid:pk>/',
          AJAXFavoriteProductAddOrRemoveView.as_view(),
          name='ajax_add_or_remove_favorite'),
