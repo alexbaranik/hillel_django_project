@@ -10,6 +10,7 @@
             <button class="btn btn-primary" type="submit">Filter</button>
           </form>
         </div>
+        <p>
         {% for product in object_list %}
           <div class="col {% if product.products.exists %}col-lg-6{% else %}col-lg-3{% endif %}">
             <div class="card h-100">
@@ -20,7 +21,9 @@
                      style="max-height: 150px; object-fit: contain">
               </a>
               <div class="card-body">
-                <h5 class="card-title">{{ product.name }}</h5>
+                <h5 class="card-title">
+                  <a href="{% url 'product_detail' product.id %}" style="color:black; text-decoration:none">{{ product.name }}</a>
+                </h5>
                 <p class="small">{{ product.category.name }}</p>
                 <p class="card-text">{{ product.description|truncatewords:16 }}</p>
                 <p>

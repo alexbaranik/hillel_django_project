@@ -4,7 +4,7 @@
   <section>
     <div class="container">
       <div class="row">
-        <div class="col-12 col-lg-10 offset-lg-1">
+        <div class="col-12">
           {% if cart %}
             <h1>Your shopping cart</h1>
             <table class="table">
@@ -22,11 +22,11 @@
                 {% for item in cart %}
                   {% with product=item.product %}
                     <tr>
-                      <td>
-                        <a href="{{ product.get_absolute_url }}">
+                      <td class="text-center">
+                        <a href="{% url 'product_detail' product.id %}">
                           <img src="{% if product.image %}{{ product.image.url }} {% else %}{% static "img/no_image.png" %}{% endif %}"
-                               height="70"
-                               width="70">
+                               style="max-height: 60px;
+                                      object-fit: contain">
                         </a>
                       </td>
                       <td>{{ product.name }}</td>
@@ -50,15 +50,15 @@
                   {% endwith %}
                 {% endfor %}
                 <tr class="total">
-                  <td>Total</td>
+                  <td><strong>Total</strong></td>
                   <td colspan="4"></td>
-                  <td class="num">{{ cart.get_total_price }} UAH</td>
+                  <td class="num"><strong>{{ cart.get_total_price }} UAH</strong></td>
                 </tr>
               </tbody>
             </table>
             <p class="text-right">
-              <a href="{% url "products" %}" class="btn btn-primary">Continue shopping</a>
-              <a href="{% url "order_create" %}" class="btn btn-primary">Checkout</a>
+              <a href="{% url "products" %}" class="btn btn-outline-primary">Continue shopping</a>
+              <a href="{% url "order_create" %}" class="btn btn-success">Checkout</a>
             </p>
           {% endif %}
         </div>

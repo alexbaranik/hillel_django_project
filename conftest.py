@@ -1,6 +1,4 @@
 import pytest
-import tempfile
-from decimal import Decimal
 from faker import Faker
 import factory
 

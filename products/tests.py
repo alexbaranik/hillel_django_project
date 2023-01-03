@@ -22,12 +22,9 @@ def test_products(login_user, client, product_factory):
 
     client, user = login_user
     
-    response = client.post(reverse('add_or_remove_favorite', args=(product.id,)), follow=True)
-    assert response.status_code == 200
+    response = client.post(reverse('ajax_add_or_remove_favorite', args=(product.pk,)), follow=True)
+    assert response.status_code == 403
 
-    response = client.post(reverse('add_or_remove_favorite', args=(product.id,)), follow=True)
-    assert response.status_code == 200
-    
     response = client.post(reverse('favorites'), follow=True)
     assert response.status_code == 200
 

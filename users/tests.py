@@ -62,13 +62,34 @@ def test_registration_user(client, faker):
 
     data = {
         'email': email,
-        'phone': phone,
         'password1': password,
         'password2': password,
     }
-
     response = client.post(url, data=data, follow=True)
     assert response.status_code == 200
-    breakpoint()
     assert User.objects.filter(email=email).exists()
     assert b"McDonald's Corporation is an" in response.content
+
+    email = faker.email()
+    password = faker.password()
+    phone = faker.phone_number()
+    data = {
+            'email': email,
+            'phone': phone,
+            'password1': password,
+            'password2': password,
+        }
+    response = client.post(url, data=data, follow=True)
+    assert response.status_code == 200
+    assert User.objects.filter(phone=phone).exists()
+    assert b"Confirm your account" in response.content
+
+    
+    data = {
+        'code': 12345
+    }
+    
+    response = client.post(reverse('confirmation_code'), data, follow=True)
+    assert response.status_code == 200
+    assert b"Code not valid. Try again." in response.content
+    
